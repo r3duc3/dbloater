@@ -1,0 +1,6 @@
+/system/app
+/system/priv-app
+/system/product/app
+/system/product/priv-app
+/system/system_ext/app
+/system/system_ext/priv-app
