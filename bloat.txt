@@ -3,3 +3,4 @@ FMRadio
 Lawnfeed
 OmniJaws
 OPWeather
+StatusBarLyricExt
