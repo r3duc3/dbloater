@@ -3,19 +3,13 @@
 OUTFD=/proc/self/fd/$2;
 ZIPFILE="$3";
 ROOT=/system_root;
-FOLDERPATH=;
-BLOATPATH=;
-FOLDERNAME=folder.txt;
-BLOATNAME=bloat.txt;
-[ -d /sdcard/$FOLDERNAME ] && FOLDERPATH=/sdcard/;
-[ -d /sdcard/$BLOATNAME ] && BLOATPATH=/sdcard/;
 [ -d /postinstall/tmp ] && POSTINSTALL=/postinstall;
 [ "$MYHOME" ] || MYHOME=$POSTINSTALL/tmp/bloater;
 
 ui_print() {
 	until [ ! "$1" ]; do
 		echo "ui_print $1
-			ui_print" >> $OUTFD;
+      ui_print" >> $OUTFD;
 		shift;
 	done;
 }
@@ -50,9 +44,9 @@ if [ $? != 0 -o ! "$(ls bloat.txt)" ]; then
 fi;
 
 # the main
-for FOLDER in $(cat $FOLDERPATH$FOLDERNAME); do
+for FOLDER in $(cat folder.txt); do
 	ui_print "[+] $FOLDER";
-	for BLOATWARE in $(cat $BLOATPATH$BLOATNAME); do
+	for BLOATWARE in $(cat bloat.txt); do
 		if [ -e $ROOT$FOLDER$BLOATWARE ]; then
 			ui_print "[-] remove $BLOATWARE";
 			rm -rf $ROOT$FOLDER$BLOATWARE;
