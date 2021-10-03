@@ -3,6 +3,12 @@
 OUTFD=/proc/self/fd/$2;
 ZIPFILE="$3";
 ROOT=/system_root;
+FOLDERPATH=;
+BLOATPATH=;
+FOLDERNAME=folder.txt;
+BLOATNAME=bloat.txt;
+[ -d /sdcard/$FOLDERNAME ] && FOLDERPATH=/sdcard/;
+[ -d /sdcard/$BLOATNAME ] && BLOATPATH=/sdcard/;
 [ -d /postinstall/tmp ] && POSTINSTALL=/postinstall;
 [ "$MYHOME" ] || MYHOME=$POSTINSTALL/tmp/bloater;
 
@@ -24,3 +30,39 @@ cleanup() {
 	cd $(dirname $MYHOME);
 	rm -rf $MYHOME;
 }
+
+# just banner
+ui_print "*************************************";
+ui_print "*           bloat remover           *";
+ui_print "*                 by                *";
+ui_print "*              _Reduce              *";
+ui_print "*************************************";
+ui_print "[!] DO WITH YOUR OWN RISK";
+
+# setup
+ui_print "[*] mount $ROOT";
+mount $ROOT || abort "[!] Mount failed";
+mkdir $MYHOME;
+cd $MYHOME;
+unzip -o "$ZIPFILE";
+if [ $? != 0 -o ! "$(ls bloat.txt)" ]; then
+	abort "[!] Unzip failed. Abort process";
+fi;
+
+# the main
+for FOLDER in $(cat $FOLDERPATH$FOLDERNAME); do
+	ui_print "[+] $FOLDER";
+	for BLOATWARE in $(cat $BLOATPATH$BLOATNAME); do
+		if [ -e $ROOT$FOLDER$BLOATWARE ]; then
+			ui_print "[-] remove $BLOATWARE";
+			rm -rf $ROOT$FOLDER$BLOATWARE;
+		fi
+	done
+	ui_print " ";
+done
+
+# finally
+ui_print "[*] umount $ROOT";
+umount $ROOT;
+ui_print "[*] clean up";
+cleanup;
