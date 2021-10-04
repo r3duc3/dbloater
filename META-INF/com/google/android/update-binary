@@ -3,6 +3,12 @@
 OUTFD=/proc/self/fd/$2;
 ZIPFILE="$3";
 ROOT=/system_root;
+FOLDERPATH=;
+BLOATPATH=;
+FOLDERNAME=folder.txt;
+BLOATNAME=bloat.txt;
+[ -d /sdcard/$FOLDERNAME ] && FOLDERPATH=/sdcard/;
+[ -d /sdcard/$BLOATNAME ] && BLOATPATH=/sdcard/;
 [ -d /postinstall/tmp ] && POSTINSTALL=/postinstall;
 [ "$MYHOME" ] || MYHOME=$POSTINSTALL/tmp/bloater;
 
@@ -26,7 +32,7 @@ cleanup() {
 }
 
 # just banner
-ui_print "*************************************";
+ui_print "**************** BETA ***************";
 ui_print "*           bloat remover           *";
 ui_print "*                 by                *";
 ui_print "*              _Reduce              *";
@@ -44,9 +50,9 @@ if [ $? != 0 -o ! "$(ls bloat.txt)" ]; then
 fi;
 
 # the main
-for FOLDER in $(cat folder.txt); do
+for FOLDER in $(cat $FOLDERPATH$FOLDERNAME); do
 	ui_print "[+] $FOLDER";
-	for BLOATWARE in $(cat bloat.txt); do
+	for BLOATWARE in $(cat $BLOATPATH$BLOATNAME); do
 		if [ -e $ROOT$FOLDER$BLOATWARE ]; then
 			ui_print "[-] remove $BLOATWARE";
 			rm -rf $ROOT$FOLDER$BLOATWARE;
